@@ -9,7 +9,7 @@ You can download the Chrome debugger [here](https://chrome.google.com/webstore/d
 
 
 ## Install
-`npm install cerebral-react-immutable-store`
+`npm install cerebral-react`
 
 ## API
 All examples are shown with ES6 syntax.
