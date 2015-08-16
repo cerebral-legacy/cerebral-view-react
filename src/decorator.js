@@ -7,8 +7,11 @@ module.exports = function (paths) {
     return React.createClass({
       displayName: Component.name + 'Container',
       mixins: [mixin],
-      getStatePaths: typeof paths === 'function' ? paths : function () {
-        return paths || {};
+      getStatePaths: function () {
+        if (!paths) {
+          return {};
+        }
+        return typeof paths === 'function' ? paths(this.props) : paths;
       },
       render: render(Component)
     });
