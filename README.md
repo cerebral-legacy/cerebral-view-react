@@ -7,9 +7,8 @@ Cerebral main repo is located [here](https://github.com/christianalfoni/cerebral
 ## Debugger
 You can download the Chrome debugger [here](https://chrome.google.com/webstore/detail/cerebral-debugger/ddefoknoniaeoikpgneklcbjlipfedbb?hl=no).
 
-
 ## Install
-`npm install cerebral-react-immutable-store`
+`npm install cerebral-react`
 
 ## API
 All examples are shown with ES6 syntax.
