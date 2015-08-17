@@ -5,7 +5,7 @@ var render = require('./render.js');
 module.exports = function (Component, paths) {
   return React.createClass({
     displayName: Component.name + 'Container',
-    mixins: [Mixin],
+    mixins: [mixin],
     getStatePaths: function () {
       if (!paths) {
         return {};
