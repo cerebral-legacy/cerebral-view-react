@@ -1,8 +1,8 @@
 # cerebral-react
 React View layer package for Cerebral
 
-## More info on Cerebral and video introduction
-Cerebral main repo is located [here](https://github.com/christianalfoni/cerebral) and a video demonstration can be found [here](https://www.youtube.com/watch?v=xCIv4-Q2dtA).
+## The Cerebral Webpage is now launched
+You can access the webpage at [http://christianalfoni.com/cerebral/](http://christianalfoni.com/cerebral/)
 
 ## Debugger
 You can download the Chrome debugger [here](https://chrome.google.com/webstore/detail/cerebral-debugger/ddefoknoniaeoikpgneklcbjlipfedbb?hl=no).
