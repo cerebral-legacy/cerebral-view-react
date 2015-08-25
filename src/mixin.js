@@ -17,13 +17,11 @@ module.exports = {
     this.recorder = this.context.controller.recorder;
     this.get = this.context.controller.get;
     this.context.controller.on('change', this._update);
-    this.context.controller.on('remember', this._update);
     this._update(this.context.controller.get([]));
   },
   componentWillUnmount: function () {
     this._isUmounting = true;
     this.context.controller.removeListener('change', this._update);
-    this.context.controller.removeListener('remember', this._update);
   },
   shouldComponentUpdate: function (nextProps, nextState) {
     var propKeys = Object.keys(nextProps);
