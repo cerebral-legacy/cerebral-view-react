@@ -19,6 +19,6 @@ module.exports = function (Component) {
     propsToPass.recorder = this.recorder;
     propsToPass.get = this.get;
 
-    return React.createElement(Component, propsToPass);
+    return React.cloneElement(React.createElement(Component, propsToPass), { 'ref': 'Component' });
   };
 };

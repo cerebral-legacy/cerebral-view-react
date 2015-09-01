@@ -14,6 +14,6 @@ module.exports = React.createClass({
     }
   },
   render: function () {
-    return React.createElement(this.props.app);
+    return React.cloneElement(React.createElement(this.props.app), { 'ref': 'App' });
   }
 });
