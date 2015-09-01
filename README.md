@@ -25,8 +25,10 @@ import App from './components/App.js';
 
 // With React 0.14 you can also write:
 // <Container controller={controller}><App/></Container>
-React.render(<Container controller={controller} app={App}/>, document.body);
+var appContainer = React.render(<Container controller={controller} app={App}/>, document.body);
 ```
+
+`appContainer.refs.App` will contain reference to `App` component instance.
 
 ### Get state in components
 
@@ -38,7 +40,7 @@ import {Decorator as Cerebral} from 'cerebral-react';
 @Cerebral({
   isLoading: ['isLoading'],
   user: ['user'],
-  error: ['error']  
+  error: ['error']
 })
 class App extends React.Component {
   componentDidMount() {
@@ -85,7 +87,7 @@ class App extends React.Component {
 App = HOC(App, {
   isLoading: ['isLoading'],
   user: ['user'],
-  error: ['error']  
+  error: ['error']
 });
 ```
 You can also use a function on your HOC:
@@ -108,7 +110,7 @@ const App = React.createClass({
     return {
       isLoading: ['isLoading'],
       user: ['user'],
-      error: ['error']  
+      error: ['error']
     };
   },
   componentDidMount() {
@@ -124,6 +126,11 @@ const App = React.createClass({
   }
 });
 ```
+
+### Get components references
+
+Using `Decorator` or `HOC` will wrap your component with `ComponentNameContainer`.
+Container will have reference to component instance in `ComponentNameContainer.refs.Component`.
 
 ### Recording
 ```js
