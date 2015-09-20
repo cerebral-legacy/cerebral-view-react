@@ -8,7 +8,6 @@ module.exports = {
   },
   componentWillMount: function () {
     this.signals = this.context.controller.signals;
-    this.recorder = this.context.controller.recorder;
 
     if (!this.getStatePaths) {
       return;

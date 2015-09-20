@@ -16,7 +16,6 @@ module.exports = function (Component) {
     }, propsToPass);
 
     propsToPass.signals = this.signals;
-    propsToPass.recorder = this.recorder;
     propsToPass.get = this.get;
 
     return React.createElement(Component, propsToPass);

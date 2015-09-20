@@ -1,40 +1,52 @@
 import React from 'react';
-import {Decorator, Container} from './../index.js';
-import Controller from 'cerebral';
-import Model from 'cerebral-immutable-store';
-
+import ReactDOM from 'react-dom';
+import {Decorator, Container, Component} from './../index.js';
+import Controller from './../../cerebral/src/index.js';
+import Model from './../../cerebral-immutable-store/index.js';
 
 const controller = Controller(Model({
-  list: ['foo'],
-  foo: 'bar'
+  items: []
 }));
 
-controller.signal('test', function AddBar (args, state) {
-  state.push('list', 'bar');
+controller.signal('test', function AddBar (input, state) {
+  state.push('items', 'foo');
 });
 
-@Decorator({
-  foo: ['foo']
-})
-class App extends React.Component {
+const App = Component((props) => (
+  <div>
+    <h1>Hello world!</h1>
+    <button onClick={() => props.signals.test()}>Add to list</button>
+    <List/>
+  </div>
+));
+
+const List = Component({
+  items: ['items']
+}, {
+  getInitialState() {
+    return {
+      doRender: true
+    }
+  },
+  toggleRender() {
+    this.setState({
+      doRender: !this.state.doRender
+    });
+  },
   render() {
+    console.log(this.props);
     return (
       <div>
-        <h1>Hello world!</h1>
-        <button onClick={() => this.props.signals.test()}>Add to list</button>
-        <List/>
+        <button onClick={() => this.toggleRender()}>Toggle render</button>
+        {
+          this.state.doRender ?
+            <ul>{this.props.items.map((item, i) => <li key={i}>{item}</li>)}</ul>
+          :
+            null
+        }
       </div>
     );
   }
-}
+});
 
-@Decorator({
-  list: ['list']
-})
-class List extends React.Component {
-  render() {
-    return <ul>{this.props.list.map((item, i) => <li key={i}>{item}</li>)}</ul>;
-  }
-}
-
-React.render(<Container controller={controller} app={App}/>, document.body);
+ReactDOM.render(<Container controller={controller} app={App}/>, document.querySelector('#app'));

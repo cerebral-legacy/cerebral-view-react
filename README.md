@@ -23,12 +23,61 @@ import {Container} from 'cerebral-react';
 // Your main application component
 import App from './components/App.js';
 
-// With React 0.14 you can also write:
-// <Container controller={controller}><App/></Container>
-React.render(<Container controller={controller} app={App}/>, document.body);
+// With React 0.14
+React.render(
+  <Container controller={controller}>
+    <App/>
+  </Container>
+, document.querySelector('#app'));
+
+// Earlier versions
+React.render(<Container controller={controller} app={App}/>, document.querySelector('#app'));
 ```
 
 ### Get state in components
+
+#### Component (requires React 0.14)
+```js
+import {Component} from 'cerebral-react';
+
+// Stateless
+const MyStatelessComponent = Component({
+  foo: ['foo']
+}, (props) => (
+  <h1>{props.foo}</h1>;
+));
+
+// Stateful
+const MyStatefulComponent = Component({
+  foo: ['foo']
+}, {
+  getInitialState() {
+    return {
+      bar: 'bar'
+    }
+  },
+  render() {
+    return <h1>{this.props.foo + this.state.bar}</h1>;
+  }
+});
+
+// No Cerebral state. Same for stateful component
+const MyStatelessComponent = Component((props) => (
+  <h1>Hello world</h1>
+));
+```
+
+You can also use a function to define state paths:
+
+```js
+const MyStatelessComponent = Component((props) => (
+  {
+    foo: ['foo', props.bar]
+  }
+), (props) => (
+  <h1>{props.foo}</h1>;
+));
+```
 
 #### Decorator
 ```js
@@ -123,32 +172,4 @@ const App = React.createClass({
     );
   }
 });
-```
-
-### Recording
-```js
-import React from 'react';
-import {Decorator as Cerebral} from 'cerebral-react-immutable-store';
-
-@Cerebral()
-class App extends React.Component {
-  record() {
-    this.props.recorder.record();
-  }
-  record() {
-    this.props.recorder.stop();
-  }
-  play() {
-    this.props.recorder.seek(0, true);
-  }
-  render() {
-    return (
-      <div>
-        <button onClick={() => this.record()}>Record</button>
-        <button onClick={() => this.stop()}>Stop</button>
-        <button onClick={() => this.play()}>Play</button>
-      </div>
-    );
-  }
-}
 ```
