@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Decorator, Container, Component} from './../index.js';
-import Controller from './../../cerebral/src/index.js';
-import Model from './../../cerebral-immutable-store/index.js';
+import Controller from 'cerebral';
+import Model from 'cerebral-baobab';
 
 const controller = Controller(Model({
   items: []
@@ -49,4 +49,6 @@ const List = Component({
   }
 });
 
-ReactDOM.render(<Container controller={controller} app={App}/>, document.querySelector('#app'));
+const root = document.body.appendChild(document.createElement('div'));
+
+ReactDOM.render(<Container controller={controller} app={App}/>, root);

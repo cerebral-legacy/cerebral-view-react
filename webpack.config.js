@@ -5,7 +5,9 @@ var config = {
   entry: path.resolve(__dirname, 'app/main.js'),
   devtool: 'eval-source-map',
   output: {
-    filename: 'bundle.js'
+    path: 'build',
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   resolve: {
     alias: {
