@@ -13,7 +13,6 @@ module.exports = {
       return;
     }
 
-    this.get = this.context.controller.get;
     if (!listener) {
       listener = true;
       this.context.controller.on('change', function () {
@@ -23,7 +22,7 @@ module.exports = {
       });
     }
     callbacks.push(this._update);
-    this._update(this.context.controller.get([]));
+    this._update();
   },
   componentWillUnmount: function () {
     this._isUmounting = true;
@@ -60,10 +59,10 @@ module.exports = {
     var statePaths = this.getStatePaths();
     var controller = this.context.controller;
     var newState = Object.keys(statePaths).reduce(function (newState, key) {
-      if (!Array.isArray(statePaths[key])) {
-        throw new Error('Cerebral-React - You have to pass an array as state path ' + statePaths[key] + ' is now valid');
+      if (!Array.isArray(statePaths[key]) && typeof statePaths[key] !== 'string') {
+        throw new Error('Cerebral-React - You have to pass an array as state path, or string as computed value, ' + statePaths[key] + ' is not valid');
       }
-      newState[key] = controller.get(statePaths[key]);
+      newState[key] = typeof statePaths[key] === 'string' ? controller.getComputedValue(statePaths[key]) : controller.get(statePaths[key]);;
       return newState;
     }, {});
     this.setState(newState);
