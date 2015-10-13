@@ -2,7 +2,7 @@ var React = require('react');
 var mixin = require('./mixin.js');
 var render = require('./render.js');
 
-module.exports = function (paths) {
+module.exports = function (paths, computedPaths) {
   return function (Component) {
     return React.createClass({
       displayName: Component.name + 'Container',
@@ -12,6 +12,12 @@ module.exports = function (paths) {
           return {};
         }
         return typeof paths === 'function' ? paths(this.props) : paths;
+      },
+      getComputedPaths: function () {
+        if (!computedPaths) {
+          return {};
+        }
+        return typeof computedPaths === 'function' ? computedPaths(this.props) : computedPaths;
       },
       render: render(Component)
     });

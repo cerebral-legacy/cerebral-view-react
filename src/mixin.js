@@ -26,7 +26,7 @@ module.exports = {
   },
   componentWillUnmount: function () {
     this._isUmounting = true;
-    if (this.getStatePaths) {
+    if (this.getStatePaths || this.getComputedPaths) {
       callbacks.splice(callbacks.indexOf(this._update), 1);
     }
   },
@@ -56,15 +56,27 @@ module.exports = {
     if (this._isUmounting) {
       return;
     }
-    var statePaths = this.getStatePaths();
+    var statePaths = this.getStatePaths ? this.getStatePaths() : {};
+    var computedPaths = this.getComputedPaths ? this.getComputedPaths() : {};
     var controller = this.context.controller;
-    var newState = Object.keys(statePaths).reduce(function (newState, key) {
-      if (!Array.isArray(statePaths[key]) && typeof statePaths[key] !== 'string') {
-        throw new Error('Cerebral-React - You have to pass an array as state path, or string as computed value, ' + statePaths[key] + ' is not valid');
+    var newState = {};
+
+    newState = Object.keys(statePaths).reduce(function (newState, key) {
+      if (!Array.isArray(statePaths[key])) {
+        throw new Error('Cerebral-React - You have to pass an array as state path ' + statePaths[key] + ' is not valid');
       }
-      newState[key] = typeof statePaths[key] === 'string' ? controller.getComputedValue(statePaths[key]) : controller.get(statePaths[key]);;
+      newState[key] = controller.get(statePaths[key]);;
       return newState;
-    }, {});
+    }, newState);
+
+    newState = Object.keys(computedPaths).reduce(function (newState, key) {
+      if (!Array.isArray(computedPaths[key])) {
+        throw new Error('Cerebral-React - You have to pass an array as a computed path ' + computedPaths[key] + ' is not valid');
+      }
+      newState[key] = controller.getComputedValue(computedPaths[key]);;
+      return newState;
+    }, newState);
+
     this.setState(newState);
   }
 };
