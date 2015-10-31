@@ -65,7 +65,10 @@ module.exports = {
       if (!Array.isArray(statePaths[key])) {
         throw new Error('Cerebral-React - You have to pass an array as state path ' + statePaths[key] + ' is not valid');
       }
-      newState[key] = controller.get(statePaths[key]);;
+      var value = controller.get(statePaths[key]);
+      if (value !== undefined) {
+        newState[key] = value;  
+      }
       return newState;
     }, newState);
 

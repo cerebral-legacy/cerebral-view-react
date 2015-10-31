@@ -36,49 +36,6 @@ React.render(<Container controller={controller} app={App}/>, document.querySelec
 
 ### Get state in components
 
-#### Component (requires React 0.14)
-```js
-import {Component} from 'cerebral-react';
-
-// Stateless
-const MyStatelessComponent = Component({
-  foo: ['foo']
-}, (props) => (
-  <h1>{props.foo}</h1>;
-));
-
-// Stateful
-const MyStatefulComponent = Component({
-  foo: ['foo']
-}, {
-  getInitialState() {
-    return {
-      bar: 'bar'
-    }
-  },
-  render() {
-    return <h1>{this.props.foo + this.state.bar}</h1>;
-  }
-});
-
-// No Cerebral state. Same for stateful component
-const MyStatelessComponent = Component((props) => (
-  <h1>Hello world</h1>
-));
-```
-
-You can also use a function to define state paths:
-
-```js
-const MyStatelessComponent = Component((props) => (
-  {
-    foo: ['foo', props.bar]
-  }
-), (props) => (
-  <h1>{props.foo}</h1>;
-));
-```
-
 #### Decorator
 ```js
 import React from 'react';
@@ -172,4 +129,47 @@ const App = React.createClass({
     );
   }
 });
+```
+
+#### Component
+```js
+import {Component} from 'cerebral-react';
+
+// Stateless
+const MyStatelessComponent = Component({
+  foo: ['foo']
+}, (props) => (
+  <h1>{props.foo}</h1>;
+));
+
+// Stateful
+const MyStatefulComponent = Component({
+  foo: ['foo']
+}, {
+  getInitialState() {
+    return {
+      bar: 'bar'
+    }
+  },
+  render() {
+    return <h1>{this.props.foo + this.state.bar}</h1>;
+  }
+});
+
+// No Cerebral state. Same for stateful component
+const MyStatelessComponent = Component((props) => (
+  <h1>Hello world</h1>
+));
+```
+
+You can also use a function to define state paths:
+
+```js
+const MyStatelessComponent = Component((props) => (
+  {
+    foo: ['foo', props.bar]
+  }
+), (props) => (
+  <h1>{props.foo}</h1>;
+));
 ```

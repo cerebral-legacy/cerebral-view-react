@@ -1,24 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Decorator as Cerebral, Container} from './../index.js';
+import {Decorator as Cerebral, Container, Link} from './../index.js';
 import Controller from 'cerebral';
+import Router from 'cerebral-router';
 import Model from 'cerebral-baobab';
 
 const controller = Controller(Model({
   items: []
-}));
-
-controller.signal('test', [function AddBar (input, state) {
-  state.push(['items'], 'foo');
-}]);
-
-controller.compute({
+}), {}, {
   superList: function (get) {
     return get(['items']).map(function (item) {
       return item.toUpperCase();
     })
   }
-})
+});
+
+controller.signal('test', [function AddBar (input, state) {
+  state.push(['items'], 'foo');
+}]);
+
+Router(controller, {
+  '/': 'test'
+});
 
 @Cerebral()
 class App extends React.Component {
@@ -35,7 +38,9 @@ class App extends React.Component {
 
 @Cerebral({
   items: ['items'],
-  super: 'superList'
+  test: ['test']
+}, {
+  super: ['superList']
 })
 class List extends React.Component {
   constructor() {
@@ -50,8 +55,10 @@ class List extends React.Component {
     });
   }
   render() {
+    console.log(this.props);
     return (
       <div>
+        <Link signal={this.props.signals.test}>hey</Link>
         <button onClick={() => this.toggleRender()}>Toggle render</button>
         {
           this.state.doRender ?
@@ -64,6 +71,11 @@ class List extends React.Component {
     );
   }
 }
+
+List.defaultProps = {
+  test: 'foo'
+};
+
 const root = document.body.appendChild(document.createElement('div'));
 
 ReactDOM.render(
