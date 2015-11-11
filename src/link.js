@@ -1,15 +1,24 @@
 var React = require('react');
 
 module.exports = React.createClass({
-  render: function () {
+  componentDidMount() {
 
-    if (typeof this.props.signal !== 'function') {
+    if (typeof this.props.signal === 'function') {
+      this.signal = this.props.signal;
+    } else {
       throw new Error('Cerebral React - You have to pass a signal to the LINK component');
     }
 
-    if (typeof this.props.signal.getUrl !== 'function') {
-      throw new Error('Cerebral React - The signal passed is not bound to a route');
-    }
+  },
+
+  onClick: function (e) {
+
+    e.preventDefault();
+    this.signal(this.props.params);
+
+  },
+
+  render: function () {
 
     var passedProps = this.props;
     var props = Object.keys(passedProps).reduce(function (props, key) {
@@ -17,8 +26,12 @@ module.exports = React.createClass({
       return props;
     }, {});
 
-    props.href = this.props.signal.getUrl(this.props.params || {});
+    if (typeof this.props.signal.getUrl === 'function') {
+      props.href = this.props.signal.getUrl(this.props.params || {});
+    } else {
+      props.onClick = this.onClick;
+    }
 
-    return React.DOM.a(props, this.props.children)
+    return React.DOM.a(props, this.props.children);
   }
 });
