@@ -5,7 +5,7 @@ module.exports = React.createClass({
     controller: React.PropTypes.object
   },
 
-  componentDidMount() {
+  componentWillMount() {
 
     if (typeof this.props.signal === 'string') {
       var signalPath = this.props.signal.split('.');
@@ -40,8 +40,8 @@ module.exports = React.createClass({
       return props;
     }, {});
 
-    if (typeof this.props.signal.getUrl === 'function') {
-      props.href = this.props.signal.getUrl(this.props.params || {});
+    if (typeof this.signal.getUrl === 'function') {
+      props.href = this.signal.getUrl(this.props.params || {});
     } else {
       props.onClick = this.onClick;
     }
