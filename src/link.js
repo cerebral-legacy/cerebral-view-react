@@ -1,12 +1,26 @@
 var React = require('react');
 
 module.exports = React.createClass({
+  contextTypes: {
+    controller: React.PropTypes.object
+  },
+
   componentDidMount() {
 
-    if (typeof this.props.signal === 'function') {
-      this.signal = this.props.signal;
+    if (typeof this.props.signal === 'string') {
+      var signalPath = this.props.signal.split('.');
+      var signalParent = this.context.controller.signals;
+
+      while(signalPath.length - 1) {
+        signalParent = signalParent[signalPath.shift()] || {};
+      }
+      this.signal = signalParent[signalPath];
     } else {
-      throw new Error('Cerebral React - You have to pass a signal to the LINK component');
+      this.signal = this.props.signal;
+    }
+
+    if (typeof this.signal !== 'function') {
+      throw new Error('Cerebral React - You have to pass a signal to the Link component');
     }
 
   },
