@@ -1,15 +1,38 @@
 var React = require('react');
 
 module.exports = React.createClass({
+  contextTypes: {
+    controller: React.PropTypes.object
+  },
+
+  componentDidMount() {
+
+    if (typeof this.props.signal === 'string') {
+      var signalPath = this.props.signal.split('.');
+      var signalParent = this.context.controller.signals;
+
+      while(signalPath.length - 1) {
+        signalParent = signalParent[signalPath.shift()] || {};
+      }
+      this.signal = signalParent[signalPath];
+    } else {
+      this.signal = this.props.signal;
+    }
+
+    if (typeof this.signal !== 'function') {
+      throw new Error('Cerebral React - You have to pass a signal to the Link component');
+    }
+
+  },
+
+  onClick: function (e) {
+
+    e.preventDefault();
+    this.signal(this.props.params);
+
+  },
+
   render: function () {
-
-    if (typeof this.props.signal !== 'function') {
-      throw new Error('Cerebral React - You have to pass a signal to the LINK component');
-    }
-
-    if (typeof this.props.signal.getUrl !== 'function') {
-      throw new Error('Cerebral React - The signal passed is not bound to a route');
-    }
 
     var passedProps = this.props;
     var props = Object.keys(passedProps).reduce(function (props, key) {
@@ -17,8 +40,12 @@ module.exports = React.createClass({
       return props;
     }, {});
 
-    props.href = this.props.signal.getUrl(this.props.params || {});
+    if (typeof this.props.signal.getUrl === 'function') {
+      props.href = this.props.signal.getUrl(this.props.params || {});
+    } else {
+      props.onClick = this.onClick;
+    }
 
-    return React.DOM.a(props, this.props.children)
+    return React.DOM.a(props, this.props.children);
   }
 });
