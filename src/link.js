@@ -5,8 +5,7 @@ module.exports = React.createClass({
     controller: React.PropTypes.object
   },
 
-  componentWillMount() {
-
+  componentWillMount: function() {
     if (typeof this.props.signal === 'string') {
       var signalPath = this.props.signal.split('.');
       var signalParent = this.context.controller.signals;
