@@ -5,7 +5,7 @@ module.exports = React.createClass({
   childContextTypes: {
     controller: React.PropTypes.object.isRequired
   },
-  componentWillMount: function () {
+  componentDidMount: function () {
     this.props.controller.devtools.start();
   },
   getChildContext: function () {
