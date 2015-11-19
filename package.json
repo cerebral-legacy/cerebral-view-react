@@ -1,6 +1,6 @@
 {
   "name": "cerebral-react",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "React View layer package for Cerebral",
   "main": "index.js",
   "scripts": {
