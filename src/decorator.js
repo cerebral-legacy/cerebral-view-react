@@ -13,12 +13,6 @@ module.exports = function (paths, computedPaths) {
         }
         return typeof paths === 'function' ? paths(this.props) : paths;
       },
-      getComputedPaths: function () {
-        if (!computedPaths) {
-          return {};
-        }
-        return typeof computedPaths === 'function' ? computedPaths(this.props) : computedPaths;
-      },
       render: render(Component)
     });
   };

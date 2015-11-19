@@ -57,26 +57,14 @@ module.exports = {
       return;
     }
     var statePaths = this.getStatePaths ? this.getStatePaths() : {};
-    var computedPaths = this.getComputedPaths ? this.getComputedPaths() : {};
     var controller = this.context.controller;
     var newState = {};
 
     newState = Object.keys(statePaths).reduce(function (newState, key) {
-      if (!Array.isArray(statePaths[key])) {
-        throw new Error('Cerebral-React - You have to pass an array as state path ' + statePaths[key] + ' is not valid');
-      }
       var value = controller.get(statePaths[key]);
       if (value !== undefined) {
-        newState[key] = value;  
+        newState[key] = value;
       }
-      return newState;
-    }, newState);
-
-    newState = Object.keys(computedPaths).reduce(function (newState, key) {
-      if (!Array.isArray(computedPaths[key])) {
-        throw new Error('Cerebral-React - You have to pass an array as a computed path ' + computedPaths[key] + ' is not valid');
-      }
-      newState[key] = controller.getComputedValue(computedPaths[key]);;
       return newState;
     }, newState);
 
