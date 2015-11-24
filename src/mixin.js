@@ -13,6 +13,10 @@ module.exports = {
       return;
     }
 
+    if (this.context.controller.isServer) {
+      return this._update();
+    }
+
     if (!listener) {
       listener = true;
       this.context.controller.on('change', function () {
