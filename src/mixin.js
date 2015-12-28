@@ -66,9 +66,7 @@ module.exports = {
 
     newState = Object.keys(statePaths).reduce(function (newState, key) {
       var value = controller.get(statePaths[key]);
-      if (value !== undefined) {
-        newState[key] = value;
-      }
+      newState[key] = value;
       return newState;
     }, newState);
 
