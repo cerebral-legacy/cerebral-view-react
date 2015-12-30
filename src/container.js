@@ -17,6 +17,6 @@ module.exports = React.createClass({
     }
   },
   render: function () {
-    return this.props.app ? React.createElement(this.props.app) : React.DOM.div(null, this.props.children);
+    return this.props.app ? React.createElement(this.props.app) : React.DOM.div(this.props);
   }
 });

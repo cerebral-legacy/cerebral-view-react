@@ -2,7 +2,7 @@ var React = require('react');
 var mixin = require('./mixin.js');
 var render = require('./render.js');
 
-module.exports = function (paths, computedPaths) {
+module.exports = function (paths) {
   return function (Component) {
     return React.createClass({
       displayName: Component.name + 'Container',

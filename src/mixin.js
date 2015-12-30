@@ -31,7 +31,7 @@ module.exports = {
   },
   componentWillUnmount: function () {
     this._isUmounting = true;
-    if (this.getStatePaths || this.getComputedPaths) {
+    if (this.getStatePaths) {
       callbacks.splice(callbacks.indexOf(this._update), 1);
     }
   },
