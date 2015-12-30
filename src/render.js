@@ -16,6 +16,7 @@ module.exports = function (Component) {
     }, propsToPass);
 
     propsToPass.signals = this.signals;
+    propsToPass.modules = this.modules;
     propsToPass.get = this.get; // Uhm?
 
     return React.createElement(Component, propsToPass);
