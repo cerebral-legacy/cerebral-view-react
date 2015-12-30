@@ -8,6 +8,7 @@ module.exports = {
   },
   componentWillMount: function () {
     this.signals = this.context.controller.signals;
+    this.modules = this.context.controller.modules;
 
     if (!this.getStatePaths) {
       return;
