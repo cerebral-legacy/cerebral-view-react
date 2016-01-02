@@ -10,7 +10,8 @@ module.exports = {
     this.signals = this.context.controller.signals;
     this.modules = this.context.controller.modules;
 
-    if (!this.getStatePaths) {
+    var statePaths = this.getStatePaths ? this.getStatePaths() : {};
+    if(!Object.keys(statePaths).length) {
       return;
     }
 
@@ -31,7 +32,13 @@ module.exports = {
   },
   componentWillUnmount: function () {
     this._isUmounting = true;
+<<<<<<< HEAD
     if (this.getStatePaths) {
+=======
+
+    var statePaths = this.getStatePaths ? this.getStatePaths() : {};
+    if(Object.keys(statePaths).length) {
+>>>>>>> pr/41
       callbacks.splice(callbacks.indexOf(this._update), 1);
     }
   },
