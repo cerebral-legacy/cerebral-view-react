@@ -7,13 +7,7 @@ import Model from 'cerebral-baobab';
 
 const controller = Controller(Model({
   items: []
-}), {}, {
-  superList: function (get) {
-    return get(['items']).map(function (item) {
-      return item.toUpperCase();
-    })
-  }
-});
+}));
 
 controller.signal('test', [function AddBar (input, state) {
   state.push(['items'], 'foo');
@@ -22,6 +16,12 @@ controller.signal('test', [function AddBar (input, state) {
 Router(controller, {
   '/': 'test'
 });
+
+const computeSuper = function (get) {
+  return get(['items']).map(function (item) {
+    return item.toUpperCase();
+  })
+}
 
 @Cerebral()
 class App extends React.Component {
@@ -38,9 +38,8 @@ class App extends React.Component {
 
 @Cerebral({
   items: ['items'],
-  test: ['test']
-}, {
-  super: ['superList']
+  test: ['test'],
+  super: computeSuper
 })
 class List extends React.Component {
   constructor() {
