@@ -6,9 +6,9 @@ module.exports = React.createClass({
     controller: React.PropTypes.object.isRequired
   },
   componentDidMount: function () {
-    this.props.controller.devtools.start();
-    if (this.props.controller.services.router) {
-      this.props.controller.services.router.trigger();
+    this.props.controller.getDevtools().start();
+    if (this.props.controller.getServices().router) {
+      this.props.controller.getServices().router.trigger();
     }
   },
   getChildContext: function () {
