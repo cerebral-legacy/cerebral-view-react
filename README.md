@@ -1,14 +1,14 @@
-# cerebral-react
+# cerebral-view-react
 React View layer package for Cerebral
 
 ## The Cerebral Webpage is now launched
-You can access the webpage at [http://christianalfoni.com/cerebral/](http://christianalfoni.com/cerebral/)
+You can access the webpage at [http://cerebraljs.com/](http://cerebraljs.com/)
 
 ## Debugger
 You can download the Chrome debugger [here](https://chrome.google.com/webstore/detail/cerebral-debugger/ddefoknoniaeoikpgneklcbjlipfedbb?hl=no).
 
 ## Install
-`npm install cerebral-react`
+`npm install cerebral-view-react`
 
 ## API
 All examples are shown with ES6 syntax.
@@ -18,7 +18,7 @@ All examples are shown with ES6 syntax.
 // Your controller instance
 import controller from './controller.js';
 import React from 'react';
-import {Container} from 'cerebral-react';
+import {Container} from 'cerebral-view-react';
 
 // Your main application component
 import App from './components/App.js';
@@ -39,7 +39,7 @@ React.render(<Container controller={controller} app={App}/>, document.querySelec
 #### Decorator
 ```js
 import React from 'react';
-import {Decorator as Cerebral} from 'cerebral-react';
+import {Decorator as Cerebral} from 'cerebral-view-react';
 
 @Cerebral({
   isLoading: ['isLoading'],
@@ -72,7 +72,7 @@ You can also use a function on your decorator:
 #### Higher Order Component
 ```js
 import React from 'react';
-import {HOC} from 'cerebral-react';
+import {HOC} from 'cerebral-view-react';
 
 class App extends React.Component {
   componentDidMount() {
@@ -106,7 +106,7 @@ App = HOC(App, (props) => {
 #### Mixin
 ```js
 import React from 'react';
-import {Mixin} from 'cerebral-react';
+import {Mixin} from 'cerebral-view-react';
 
 const App = React.createClass({
   mixins: [Mixin],
@@ -133,7 +133,7 @@ const App = React.createClass({
 
 #### Component
 ```js
-import {Component} from 'cerebral-react';
+import {Component} from 'cerebral-view-react';
 
 // Stateless
 const MyStatelessComponent = Component({
