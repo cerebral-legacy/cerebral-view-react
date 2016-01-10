@@ -3,15 +3,17 @@ import ReactDOM from 'react-dom';
 import {Decorator as Cerebral, Container, Link} from './../index.js';
 import Controller from 'cerebral';
 import Router from 'cerebral-router';
-import Model from 'cerebral-baobab';
+import Model from 'cerebral-model-baobab';
 
 const controller = Controller(Model({
   items: []
 }));
 
-controller.signal('test', [function AddBar (input, state) {
-  state.push(['items'], 'foo');
-}]);
+controller.signals({
+  'test': [function AddBar ({state}) {
+    state.push(['items'], 'foo');
+  }]
+});
 
 Router(controller, {
   '/': 'test'

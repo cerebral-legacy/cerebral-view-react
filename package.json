@@ -1,6 +1,6 @@
 {
   "name": "cerebral-view-react",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "React View layer package for Cerebral",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/christianalfoni/cerebral-react.git"
+    "url": "git+https://github.com/christianalfoni/cerebral-view-react.git"
   },
   "keywords": [
     "react",
@@ -17,24 +17,24 @@
     "flux",
     "mvc"
   ],
-  "author": "Christian Alfoni",
+  "author": "Christian Alfoni <christianalfoni@gmail.com>",
+  "contributors": [
+    "Aleksey Guryanov <gurianov@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/christianalfoni/cerebral-react/issues"
+    "url": "https://github.com/christianalfoni/cerebral-view-react/issues"
   },
-  "homepage": "https://github.com/christianalfoni/cerebral-react#readme",
+  "homepage": "https://github.com/christianalfoni/cerebral-view-react#readme",
   "devDependencies": {
-    "babel-loader": "^5.3.2",
-    "baobab": "^2.0.0",
-    "cerebral": "^0.27.0",
-    "cerebral-baobab": "^0.4.4",
-    "node-libs-browser": "^0.5.2",
-    "react": "0.14.5",
-    "react-dom": "0.14.5",
-    "webpack": "^1.10.1",
-    "webpack-dev-server": "^1.10.1"
-  },
-  "dependencies": {
-    "cerebral-router": "^0.8.0"
+    "babel-loader": "^5.4.0",
+    "cerebral": "^0.30.0",
+    "cerebral-model-baobab": "^0.4.5",
+    "cerebral-router": "^0.9.2",
+    "node-libs-browser": "^0.5.3",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "webpack": "^1.12.10",
+    "webpack-dev-server": "^1.14.0"
   }
 }
