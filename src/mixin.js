@@ -39,8 +39,8 @@ module.exports = {
     }
   },
   shouldComponentUpdate: function (nextProps, nextState) {
-    var propKeys = Object.keys(nextProps);
-    var stateKeys = Object.keys(nextState);
+    var propKeys = Object.keys(nextProps || {});
+    var stateKeys = Object.keys(nextState || {});
 
     // props
     for (var x = 0; x < propKeys.length; x++) {
