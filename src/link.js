@@ -8,7 +8,7 @@ module.exports = React.createClass({
   componentWillMount: function() {
     if (typeof this.props.signal === 'string') {
       var signalPath = this.props.signal.split('.');
-      var signalParent = this.context.controller.signals;
+      var signalParent = this.context.controller.getSignals();
 
       while(signalPath.length - 1) {
         signalParent = signalParent[signalPath.shift()] || {};
