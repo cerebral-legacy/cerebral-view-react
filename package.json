@@ -1,14 +1,15 @@
 {
   "name": "cerebral-view-react",
-  "version": "0.10.3",
+  "version": "0.0.0-semantically-released",
   "description": "React View layer package for Cerebral",
   "main": "index.js",
   "scripts": {
-    "test": "standard"
+    "test": "standard",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cerebral/cerebral-view-react.git"
+    "url": "https://github.com/cerebral/cerebral-view-react.git"
   },
   "keywords": [
     "react",
