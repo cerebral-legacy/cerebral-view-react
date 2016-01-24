@@ -1,6 +1,6 @@
-var React = require('react');
-var mixin = require('./mixin.js');
-var render = require('./render.js');
+var React = require('react')
+var mixin = require('./mixin.js')
+var render = require('./render.js')
 
 module.exports = function (Component, paths) {
   return React.createClass({
@@ -8,10 +8,10 @@ module.exports = function (Component, paths) {
     mixins: [mixin],
     getStatePaths: function () {
       if (!paths) {
-        return {};
+        return {}
       }
-      return typeof paths === 'function' ? paths(this.props) : paths;
+      return typeof paths === 'function' ? paths(this.props) : paths
     },
     render: render(Component)
-  });
-};
+  })
+}
