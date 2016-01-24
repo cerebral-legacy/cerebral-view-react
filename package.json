@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/christianalfoni/cerebral-view-react.git"
+    "url": "git+https://github.com/cerebral/cerebral-view-react.git"
   },
   "keywords": [
     "react",
@@ -22,9 +22,27 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/christianalfoni/cerebral-view-react/issues"
+    "url": "https://github.com/cerebral/cerebral-view-react/issues"
   },
-  "homepage": "https://github.com/christianalfoni/cerebral-view-react#readme",
+  "homepage": "https://github.com/cerebral/cerebral-view-react#readme",
   "devDependencies": {
+    "commitizen": "^2.5.0",
+    "conventional-changelog": "0.0.17",
+    "cz-customizable": "^2.7.1",
+    "ghooks": "^1.0.3",
+    "semantic-release": "^4.3.5",
+    "standard": "^5.4.1",
+    "validate-commit-msg": "^1.1.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "ghooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  },
+  "release": {
+    "analyzeCommits": "./sr-prerelease.js"
   }
 }
