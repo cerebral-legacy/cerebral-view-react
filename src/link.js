@@ -6,7 +6,7 @@ module.exports = React.createClass({
   },
 
   propTypes: {
-    children: React.PropTypes.element,
+    children: React.PropTypes.node,
     params: React.PropTypes.object,
     signal: React.PropTypes.oneOfType([
       React.PropTypes.func,
