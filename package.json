@@ -50,5 +50,8 @@
   },
   "release": {
     "analyzeCommits": "./sr-prerelease.js"
+  },
+  "dependencies": {
+    "lodash.get": "^4.0.0"
   }
 }

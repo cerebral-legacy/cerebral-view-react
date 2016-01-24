@@ -1,4 +1,5 @@
 var React = require('react')
+var get = require('lodash.get')
 
 module.exports = React.createClass({
   contextTypes: {
@@ -15,20 +16,20 @@ module.exports = React.createClass({
   },
 
   componentWillMount: function () {
-    if (typeof this.props.signal === 'string') {
-      var signalPath = this.props.signal.split('.')
-      var signalParent = this.context.controller.getSignals()
+    var controller = this.context.controller
 
-      while (signalPath.length - 1) {
-        signalParent = signalParent[signalPath.shift()] || {}
-      }
-      this.signal = signalParent[signalPath]
-    } else {
+    if (typeof this.props.signal === 'function') {
       this.signal = this.props.signal
+      this.signalName = this.signal.name
+    } else {
+      this.signalName = this.props.signal
+      this.signal = get(controller.getSignals(), this.signalName)
     }
 
+    this.router = get(controller.getServices(), controller.getModules()['cerebral-module-router'].name)
+
     if (typeof this.signal !== 'function') {
-      throw new Error('Cerebral React - You have to pass a signal to the Link component')
+      throw new Error('Cerebral React - You have to pass a signal or signal name to the Link component')
     }
   },
 
@@ -44,7 +45,9 @@ module.exports = React.createClass({
       return props
     }, {})
 
-    if (typeof this.signal.getUrl === 'function') {
+    if (typeof this.router.getSignalUrl === 'function') {
+      props.href = this.router.getSignalUrl(this.signalName, this.props.params)
+    } else if (typeof this.signal.getUrl === 'function') {
       props.href = this.signal.getUrl(this.props.params || {})
     } else {
       props.onClick = this.onClick
