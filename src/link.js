@@ -26,7 +26,10 @@ module.exports = React.createClass({
       this.signal = get(controller.getSignals(), this.signalName)
     }
 
-    this.router = get(controller.getServices(), controller.getModules()['cerebral-module-router'].name)
+    var routerMeta = controller.getModules()['cerebral-module-router']
+    if (routerMeta) {
+      this.router = get(controller.getServices(), routerMeta.name)
+    }
 
     if (typeof this.signal !== 'function') {
       throw new Error('Cerebral React - You have to pass a signal or signal name to the Link component')
@@ -45,7 +48,7 @@ module.exports = React.createClass({
       return props
     }, {})
 
-    if (typeof this.router.getSignalUrl === 'function') {
+    if (this.router && typeof this.router.getSignalUrl === 'function') {
       props.href = this.router.getSignalUrl(this.signalName, this.props.params)
     } else if (typeof this.signal.getUrl === 'function') {
       props.href = this.signal.getUrl(this.props.params || {})
