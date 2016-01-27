@@ -49,10 +49,11 @@ module.exports = React.createClass({
     }, {})
 
     if (this.router && typeof this.router.getSignalUrl === 'function') {
-      props.href = this.router.getSignalUrl(this.signalName, this.props.params)
+      props.href = this.router.getSignalUrl(this.signalName, this.props.params) || undefined
     } else if (typeof this.signal.getUrl === 'function') {
       props.href = this.signal.getUrl(this.props.params || {})
-    } else {
+    }
+    if (!props.href) {
       props.onClick = this.onClick
     }
 
