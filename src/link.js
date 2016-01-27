@@ -20,7 +20,7 @@ module.exports = React.createClass({
 
     if (typeof this.props.signal === 'function') {
       this.signal = this.props.signal
-      this.signalName = this.signal.name
+      this.signalName = this.signal.signalName
     } else {
       this.signalName = this.props.signal
       this.signal = get(controller.getSignals(), this.signalName)
