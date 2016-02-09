@@ -1,6 +1,5 @@
 var React = require('react')
 var mixin = require('./mixin.js')
-var render = require('./render.js')
 var Hoc = require('./hoc.js')
 
 module.exports = function (paths) {
