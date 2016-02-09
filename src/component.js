@@ -1,6 +1,6 @@
 var React = require('react')
 var mixin = require('./mixin.js')
-var render = require('./render.js')
+var Hoc = require('./hoc.js')
 
 module.exports = function () {
   var paths
@@ -21,14 +21,5 @@ module.exports = function () {
     Component = React.createClass(componentDefinition)
   }
 
-  return React.createClass({
-    mixins: [mixin],
-    getStatePaths: function () {
-      if (!paths) {
-        return {}
-      }
-      return typeof paths === 'function' ? paths(this.props) : paths
-    },
-    render: render(Component)
-  })
+  return Hoc(Component, paths)
 }
