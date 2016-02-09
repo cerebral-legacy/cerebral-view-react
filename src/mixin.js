@@ -58,7 +58,7 @@ module.exports = {
 
     return false
   },
-  getProps() {
+  getProps: function () {
     var state = this.state || {}
     var props = this.props || {}
 
@@ -76,7 +76,7 @@ module.exports = {
     propsToPass.modules = this.modules
     propsToPass.get = this.get // Uhm?
 
-    return propsToPass;
+    return propsToPass
   },
   _update: function () {
     if (this._isUmounting) {

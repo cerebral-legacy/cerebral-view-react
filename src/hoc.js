@@ -11,8 +11,8 @@ module.exports = function (Component, paths) {
       }
       return typeof paths === 'function' ? paths(this.getProps()) : paths
     },
-    render: function() {
-      return React.createElement(Component, this.getProps());
+    render: function () {
+      return React.createElement(Component, this.getProps())
     }
   })
 }
