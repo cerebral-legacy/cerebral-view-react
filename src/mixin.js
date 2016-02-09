@@ -58,6 +58,26 @@ module.exports = {
 
     return false
   },
+  getProps: function () {
+    var state = this.state || {}
+    var props = this.props || {}
+
+    var propsToPass = Object.keys(state).reduce(function (props, key) {
+      props[key] = state[key]
+      return props
+    }, {})
+
+    propsToPass = Object.keys(props).reduce(function (propsToPass, key) {
+      propsToPass[key] = props[key]
+      return propsToPass
+    }, propsToPass)
+
+    propsToPass.signals = this.signals
+    propsToPass.modules = this.modules
+    propsToPass.get = this.get // Uhm?
+
+    return propsToPass
+  },
   _update: function () {
     if (this._isUmounting) {
       return
