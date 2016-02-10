@@ -7,8 +7,8 @@ module.exports = {
     controller: React.PropTypes.object
   },
   componentWillMount: function () {
-    this.signals = this.context.controller.getSignals()
-    this.modules = this.context.controller.getModules()
+    this.signals = this.context.controller.isServer ? {} : this.context.controller.getSignals()
+    this.modules = this.context.controller.isServer ? {} : this.context.controller.getModules()
 
     var statePaths = this.getStatePaths ? this.getStatePaths() : {}
     if (!Object.keys(statePaths).length) {
