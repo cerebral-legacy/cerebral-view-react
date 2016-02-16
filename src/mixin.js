@@ -87,7 +87,7 @@ module.exports = {
     var newState = {}
 
     newState = Object.keys(statePaths).reduce(function (newState, key) {
-      var value = controller.get(statePaths[key])
+      var value = controller.get(typeof statePaths[key] === 'string' ? statePaths[key].split('.') : statePaths[key])
       newState[key] = value
       return newState
     }, newState)
