@@ -5,11 +5,14 @@ module.exports = function (Component, paths) {
   return React.createClass({
     displayName: Component.name + 'Container',
     mixins: [mixin],
-    getStatePaths: function () {
+    componentWillReceiveProps: function (nextProps) {
+      this._update(null, nextProps)
+    },
+    getStatePaths: function (props) {
       if (!paths) {
         return {}
       }
-      return typeof paths === 'function' ? paths(this.getProps()) : paths
+      return typeof paths === 'function' ? paths(props) : paths
     },
     render: function () {
       return React.createElement(Component, this.getProps())

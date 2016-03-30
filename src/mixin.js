@@ -2,6 +2,8 @@ var React = require('react')
 var callbacks = []
 var listener = false
 
+var currentUpdateLoopId = 0
+
 module.exports = {
   contextTypes: {
     controller: React.PropTypes.object
@@ -10,7 +12,7 @@ module.exports = {
     this.signals = this.context.controller.isServer ? {} : this.context.controller.getSignals()
     this.modules = this.context.controller.isServer ? {} : this.context.controller.getModules()
 
-    var statePaths = this.getStatePaths ? this.getStatePaths() : {}
+    var statePaths = this.getStatePaths ? this.getStatePaths(this.props) : {}
     if (!Object.keys(statePaths).length) {
       return
     }
@@ -22,9 +24,20 @@ module.exports = {
     if (!listener) {
       listener = true
       this.context.controller.on('change', function () {
-        callbacks.forEach(function (cb) {
-          cb()
-        })
+        var callbacksCount = callbacks.length
+        var nextCallbackIndex = -1
+        var runningLoopId = ++currentUpdateLoopId
+        var runNextCallback = function () {
+          if (currentUpdateLoopId !== runningLoopId) {
+            return
+          }
+          nextCallbackIndex++
+          if (nextCallbackIndex === callbacksCount) {
+            return
+          }
+          callbacks[nextCallbackIndex](runNextCallback)
+        }
+        runNextCallback()
       })
     }
     callbacks.push(this._update)
@@ -33,7 +46,7 @@ module.exports = {
   componentWillUnmount: function () {
     this._isUmounting = true
 
-    var statePaths = this.getStatePaths ? this.getStatePaths() : {}
+    var statePaths = this.getStatePaths ? this.getStatePaths(this.props) : {}
     if (Object.keys(statePaths).length) {
       callbacks.splice(callbacks.indexOf(this._update), 1)
     }
@@ -55,7 +68,6 @@ module.exports = {
         return true
       }
     }
-
     return false
   },
   getProps: function () {
@@ -78,11 +90,13 @@ module.exports = {
 
     return propsToPass
   },
-  _update: function () {
-    if (this._isUmounting) {
+  _update: function (nextUpdate, props) {
+    if (this._isUmounting || this._lastUpdateLoopId === currentUpdateLoopId) {
       return
     }
-    var statePaths = this.getStatePaths ? this.getStatePaths() : {}
+    this._lastUpdateLoopId = currentUpdateLoopId
+
+    var statePaths = this.getStatePaths ? this.getStatePaths(props || this.props) : {}
     var controller = this.context.controller
     var newState = {}
 
@@ -92,6 +106,10 @@ module.exports = {
       return newState
     }, newState)
 
-    this.setState(newState)
+    if (nextUpdate) {
+      this.setState(newState, nextUpdate)
+    } else {
+      this.setState(newState)
+    }
   }
 }
