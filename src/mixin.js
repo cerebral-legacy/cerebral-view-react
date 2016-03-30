@@ -24,7 +24,6 @@ module.exports = {
     if (!listener) {
       listener = true
       this.context.controller.on('change', function () {
-        var callbacksCount = callbacks.length
         var nextCallbackIndex = -1
         var runningLoopId = ++currentUpdateLoopId
         var runNextCallback = function () {
@@ -32,7 +31,7 @@ module.exports = {
             return
           }
           nextCallbackIndex++
-          if (nextCallbackIndex === callbacksCount) {
+          if (!callbacks[nextCallbackIndex]) {
             return
           }
           callbacks[nextCallbackIndex](runNextCallback)
