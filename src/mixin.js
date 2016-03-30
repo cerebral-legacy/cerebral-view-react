@@ -24,19 +24,22 @@ module.exports = {
     if (!listener) {
       listener = true
       this.context.controller.on('change', function () {
-        var nextCallbackIndex = -1
         var runningLoopId = ++currentUpdateLoopId
-        var runNextCallback = function () {
-          if (currentUpdateLoopId !== runningLoopId) {
-            return
+        var scopedRun = function (runningLoopId) {
+          var nextCallbackIndex = -1
+          var runNextCallback = function () {
+            if (currentUpdateLoopId !== runningLoopId) {
+              return
+            }
+            nextCallbackIndex++
+            if (!callbacks[nextCallbackIndex]) {
+              return
+            }
+            callbacks[nextCallbackIndex](runNextCallback)
           }
-          nextCallbackIndex++
-          if (!callbacks[nextCallbackIndex]) {
-            return
-          }
-          callbacks[nextCallbackIndex](runNextCallback)
+          runNextCallback()
         }
-        runNextCallback()
+        scopedRun(runningLoopId)
       })
     }
     callbacks.push(this._update)
@@ -93,7 +96,6 @@ module.exports = {
     if (this._isUmounting || this._lastUpdateLoopId === currentUpdateLoopId) {
       return
     }
-    this._lastUpdateLoopId = currentUpdateLoopId
 
     var statePaths = this.getStatePaths ? this.getStatePaths(props || this.props) : {}
     var controller = this.context.controller
@@ -106,6 +108,7 @@ module.exports = {
     }, newState)
 
     if (nextUpdate) {
+      this._lastUpdateLoopId = currentUpdateLoopId
       this.setState(newState, nextUpdate)
     } else {
       this.setState(newState)
