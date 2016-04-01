@@ -88,7 +88,6 @@ module.exports = {
 
     propsToPass.signals = this.signals
     propsToPass.modules = this.modules
-    propsToPass.get = this.get // Uhm?
 
     return propsToPass
   },

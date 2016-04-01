@@ -12,7 +12,11 @@ module.exports = function (Component, paths) {
       if (!paths) {
         return {}
       }
-      return typeof paths === 'function' ? paths(props) : paths
+      var propsWithModules = Object.keys(props).reduce(function (propsWithModules, key) {
+        propsWithModules[key] = props[key]
+        return propsWithModules
+      }, {modules: this.modules})
+      return typeof paths === 'function' ? paths(propsWithModules) : paths
     },
     render: function () {
       return React.createElement(Component, this.getProps())
