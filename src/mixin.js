@@ -1,6 +1,6 @@
 var React = require('react')
 var callbacks = []
-var listener = false
+var currentController = null
 
 var currentUpdateLoopId = 0
 
@@ -21,29 +21,33 @@ module.exports = {
       return this._update()
     }
 
-    if (!listener) {
-      listener = true
-      this.context.controller.on('change', function () {
-        var runningLoopId = ++currentUpdateLoopId
-        var scopedRun = function (runningLoopId) {
-          var nextCallbackIndex = -1
-          var runNextCallback = function () {
-            if (currentUpdateLoopId !== runningLoopId) {
-              return
-            }
-            nextCallbackIndex++
-            if (!callbacks[nextCallbackIndex]) {
-              return
-            }
-            callbacks[nextCallbackIndex](runNextCallback)
-          }
-          runNextCallback()
-        }
-        scopedRun(runningLoopId)
-      })
+    if (currentController !== this.context.controller) {
+      if (currentController) {
+        currentController.removeListener('change', this.listener)
+      }
+      currentController = this.context.controller
+      this.context.controller.on('change', this.listener)
     }
     callbacks.push(this._update)
     this._update()
+  },
+  listener: function () {
+    var runningLoopId = ++currentUpdateLoopId
+    var scopedRun = function (runningLoopId) {
+      var nextCallbackIndex = -1
+      var runNextCallback = function () {
+        if (currentUpdateLoopId !== runningLoopId) {
+          return
+        }
+        nextCallbackIndex++
+        if (!callbacks[nextCallbackIndex]) {
+          return
+        }
+        callbacks[nextCallbackIndex](runNextCallback)
+      }
+      runNextCallback()
+    }
+    scopedRun(runningLoopId)
   },
   componentWillUnmount: function () {
     this._isUmounting = true
