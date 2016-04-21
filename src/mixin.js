@@ -112,7 +112,8 @@ module.exports = {
 
     if (nextUpdate) {
       this._lastUpdateLoopId = currentUpdateLoopId
-      this.setState(newState, nextUpdate)
+      this.setState(newState)
+      nextUpdate()
     } else {
       this.setState(newState)
     }
