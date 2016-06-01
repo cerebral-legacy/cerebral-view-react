@@ -4,6 +4,13 @@ var currentController = null
 
 var currentUpdateLoopId = 0
 
+function hasChanged(path, changes) {
+  path = Array.isArray(path) ? path : path.split('.');
+  return path.reduce(function (changes, key) {
+    return changes ? changes[key] : false;
+  }, changes);
+}
+
 module.exports = {
   contextTypes: {
     controller: React.PropTypes.object
@@ -23,15 +30,14 @@ module.exports = {
 
     if (currentController !== this.context.controller) {
       if (currentController) {
-        currentController.removeListener('change', this.listener)
+        currentController.removeListener('flush', this.listener)
       }
       currentController = this.context.controller
-      this.context.controller.on('change', this.listener)
+      this.context.controller.on('flush', this.listener)
     }
     callbacks.push(this._update)
-    this._update()
   },
-  listener: function () {
+  listener: function (changes) {
     var runningLoopId = ++currentUpdateLoopId
     var scopedRun = function (runningLoopId) {
       var nextCallbackIndex = -1
@@ -43,7 +49,10 @@ module.exports = {
         if (!callbacks[nextCallbackIndex]) {
           return
         }
-        callbacks[nextCallbackIndex](runNextCallback)
+        callbacks[nextCallbackIndex]({
+          next: runNextCallback,
+          changes: changes
+        })
       }
       runNextCallback()
     }
@@ -58,30 +67,16 @@ module.exports = {
     }
   },
   shouldComponentUpdate: function (nextProps, nextState) {
-    var propKeys = Object.keys(nextProps || {})
-    var stateKeys = Object.keys(nextState || {})
-
-    // props
-    for (var i = 0; i < propKeys.length; i++) {
-      if (this.props[propKeys[i]] !== nextProps[propKeys[i]]) {
-        return true
-      }
-    }
-
-    // State
-    for (var j = 0; j < stateKeys.length; j++) {
-      if (this.state[stateKeys[j]] !== nextState[stateKeys[j]]) {
-        return true
-      }
-    }
-    return false
+    // We control rendering ourselves
+    return false;
   },
   getProps: function () {
-    var state = this.state || {}
+    var controller = this.context.controller;
     var props = this.props || {}
+    var paths = this.getStatePaths ? this.getStatePaths(this.props) : {}
 
-    var propsToPass = Object.keys(state).reduce(function (props, key) {
-      props[key] = state[key]
+    var propsToPass = Object.keys(paths || {}).reduce(function (props, key) {
+      props[key] = paths[key].hasChanged ? paths[key].get(controller.get()) : controller.get(paths[key]);
       return props
     }, {})
 
@@ -90,32 +85,51 @@ module.exports = {
       return propsToPass
     }, propsToPass)
 
+
+
     propsToPass.signals = this.signals
     propsToPass.modules = this.modules
 
     return propsToPass
   },
-  _update: function (nextUpdate, props) {
+  _update: function (stateUpdate, propsUpdate) {
     if (this._isUmounting || this._lastUpdateLoopId === currentUpdateLoopId) {
       return
     }
 
-    var statePaths = this.getStatePaths ? this.getStatePaths(props || this.props) : {}
-    var controller = this.context.controller
-    var newState = {}
-
-    newState = Object.keys(statePaths).reduce(function (newState, key) {
-      var value = controller.get(typeof statePaths[key] === 'string' ? statePaths[key].split('.') : statePaths[key])
-      newState[key] = value
-      return newState
-    }, newState)
-
-    if (nextUpdate) {
-      this._lastUpdateLoopId = currentUpdateLoopId
-      this.setState(newState)
-      nextUpdate()
+    var hasChange = false;
+    if (stateUpdate) {
+      var paths = this.getStatePaths ? this.getStatePaths(propsUpdate || this.props) : {}
+      for (var key in paths) {
+        if (
+          (paths[key].hasChanged && paths[key].hasChanged(stateUpdate.changes)) ||
+          (!paths[key].hasChanged && hasChanged(paths[key], stateUpdate.changes))
+        ) {
+          hasChange = true; // Have to check all due to updating computed
+        }
+      }
     } else {
-      this.setState(newState)
+      var oldPropKeys = Object.keys(this.props);
+      var newPropKeys = Object.keys(propsUpdate);
+      if (oldPropKeys.length !== newPropKeys.length) {
+        hasChange = true;
+      } else {
+        for (var i = 0; i < newPropKeys.length; i++) {
+          if (this.props[newPropKeys[i]] !== propsUpdate[newPropKeys[i]]) {
+            hasChange = true
+            break
+          }
+        }
+      }
+    }
+
+
+    if (stateUpdate) {
+      this._lastUpdateLoopId = currentUpdateLoopId
+      hasChange && this.forceUpdate()
+      stateUpdate.next()
+    } else {
+      hasChange && this.forceUpdate()
     }
   }
 }
