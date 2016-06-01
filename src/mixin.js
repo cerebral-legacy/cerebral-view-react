@@ -1,87 +1,35 @@
 var React = require('react')
-var callbacks = []
-var currentController = null
-
-var currentUpdateLoopId = 0
 
 module.exports = {
   contextTypes: {
-    controller: React.PropTypes.object
+    cerebral: React.PropTypes.object
   },
   componentWillMount: function () {
-    this.signals = this.context.controller.isServer ? {} : this.context.controller.getSignals()
-    this.modules = this.context.controller.isServer ? {} : this.context.controller.getModules()
+    this.signals = this.context.cerebral.controller.isServer ? {} : this.context.cerebral.controller.getSignals()
+    this.modules = this.context.cerebral.controller.isServer ? {} : this.context.cerebral.controller.getModules()
 
     var statePaths = this.getStatePaths ? this.getStatePaths(this.props) : {}
     if (!Object.keys(statePaths).length) {
       return
     }
-
-    if (this.context.controller.isServer) {
-      return this._update()
-    }
-
-    if (currentController !== this.context.controller) {
-      if (currentController) {
-        currentController.removeListener('change', this.listener)
-      }
-      currentController = this.context.controller
-      this.context.controller.on('change', this.listener)
-    }
-    callbacks.push(this._update)
-    this._update()
-  },
-  listener: function () {
-    var runningLoopId = ++currentUpdateLoopId
-    var scopedRun = function (runningLoopId) {
-      var nextCallbackIndex = -1
-      var runNextCallback = function () {
-        if (currentUpdateLoopId !== runningLoopId) {
-          return
-        }
-        nextCallbackIndex++
-        if (!callbacks[nextCallbackIndex]) {
-          return
-        }
-        callbacks[nextCallbackIndex](runNextCallback)
-      }
-      runNextCallback()
-    }
-    scopedRun(runningLoopId)
+    this.context.cerebral.registerComponent(this, this.getDepsMap(this.props))
   },
   componentWillUnmount: function () {
     this._isUmounting = true
-
-    var statePaths = this.getStatePaths ? this.getStatePaths(this.props) : {}
-    if (Object.keys(statePaths).length) {
-      callbacks.splice(callbacks.indexOf(this._update), 1)
-    }
+    this.context.cerebral.unregisterComponent(this)
   },
   shouldComponentUpdate: function (nextProps, nextState) {
-    var propKeys = Object.keys(nextProps || {})
-    var stateKeys = Object.keys(nextState || {})
-
-    // props
-    for (var i = 0; i < propKeys.length; i++) {
-      if (this.props[propKeys[i]] !== nextProps[propKeys[i]]) {
-        return true
-      }
-    }
-
-    // State
-    for (var j = 0; j < stateKeys.length; j++) {
-      if (this.state[stateKeys[j]] !== nextState[stateKeys[j]]) {
-        return true
-      }
-    }
+    // We only allow forced render by change of props passed
+    // or Container tells it to render
     return false
   },
   getProps: function () {
-    var state = this.state || {}
+    var controller = this.context.cerebral.controller
     var props = this.props || {}
+    var paths = this.getStatePaths ? this.getStatePaths(this.props) : {}
 
-    var propsToPass = Object.keys(state).reduce(function (props, key) {
-      props[key] = state[key]
+    var propsToPass = Object.keys(paths || {}).reduce(function (props, key) {
+      props[key] = paths[key].getDepsMap ? paths[key].get(controller.get()) : controller.get(paths[key])
       return props
     }, {})
 
@@ -95,27 +43,14 @@ module.exports = {
 
     return propsToPass
   },
-  _update: function (nextUpdate, props) {
-    if (this._isUmounting || this._lastUpdateLoopId === currentUpdateLoopId) {
+  _update: function (showOverlay) {
+    if (this._isUmounting) {
       return
     }
-
-    var statePaths = this.getStatePaths ? this.getStatePaths(props || this.props) : {}
-    var controller = this.context.controller
-    var newState = {}
-
-    newState = Object.keys(statePaths).reduce(function (newState, key) {
-      var value = controller.get(typeof statePaths[key] === 'string' ? statePaths[key].split('.') : statePaths[key])
-      newState[key] = value
-      return newState
-    }, newState)
-
-    if (nextUpdate) {
-      this._lastUpdateLoopId = currentUpdateLoopId
-      this.setState(newState)
-      nextUpdate()
-    } else {
-      this.setState(newState)
+    if (showOverlay && !this.showingOverlay) {
+      this.showOverlay = true
     }
+
+    this.forceUpdate()
   }
 }

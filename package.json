@@ -33,10 +33,13 @@
     "ghooks": "^1.0.3",
     "semantic-release": "^4.3.5",
     "standard": "^5.4.1",
-    "validate-commit-msg": "^1.1.1"
+    "validate-commit-msg": "^1.1.1",
+    "cerebral": "^0.35.0-0",
+    "react": "^0.14.0 || ^15.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0"
   },
   "peerDependencies": {
-    "cerebral": "^0.33.0 || ^0.34.0-0",
+    "cerebral": "^0.35.0-0",
     "react": "^0.14.0 || ^15.0.0",
     "react-dom": "^0.14.0 || ^15.0.0"
   },
