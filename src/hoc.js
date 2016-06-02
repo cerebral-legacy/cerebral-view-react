@@ -34,7 +34,6 @@ module.exports = function (Component, paths) {
       if (typeof paths === 'function') {
         this.context.cerebral.updateComponent(this, this.getDepsMap(nextProps))
       } else {
-        if (hasChange) console.log('Render by props')
         hasChange && this._update();
       }
     },

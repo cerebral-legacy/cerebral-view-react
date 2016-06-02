@@ -21,13 +21,11 @@ module.exports = React.createClass({
   },
   onCerebralUpdate: function (changes) {
     var componentsMap = this.componentsMap;
-    console.log('Got change', changes, componentsMap);
     function traverse(level, currentPath, componentsToRender) {
       Object.keys(level).forEach(function (key) {
         currentPath.push(key);
         var stringPath = currentPath.join('.');
         if (componentsMap[stringPath]) {
-          console.log('Collecting components on', stringPath);
           componentsToRender = componentsMap[stringPath].reduce(function (componentsToRender, component) {
             if (componentsToRender.indexOf(component) === -1) {
               return componentsToRender.concat(component);
