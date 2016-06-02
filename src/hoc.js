@@ -3,7 +3,7 @@ var mixin = require('./mixin.js')
 
 function extractDeps(deps, allDeps) {
   return Object.keys(deps).reduce(function (depsMap, key) {
-    if (deps[key].hasChanged) {
+    if (deps[key].getDepsMap) {
       return extractDeps(deps[key].getDepsMap(), allDeps);
     } else {
       depsMap[deps[key]] = true;

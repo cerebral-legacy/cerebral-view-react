@@ -2,7 +2,7 @@ var React = require('react')
 
 module.exports = React.createClass({
   contextTypes: {
-    controller: React.PropTypes.object
+    cerebral: React.PropTypes.object
   },
 
   propTypes: {
@@ -23,7 +23,7 @@ module.exports = React.createClass({
   },
 
   render: function () {
-    var controller = this.context.controller
+    var controller = this.context.cerebral.controller
     var router
     var signal
     var signalName

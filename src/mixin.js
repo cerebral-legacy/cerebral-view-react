@@ -29,7 +29,7 @@ module.exports = {
     var paths = this.getStatePaths ? this.getStatePaths(this.props) : {}
 
     var propsToPass = Object.keys(paths || {}).reduce(function (props, key) {
-      props[key] = paths[key].hasChanged ? paths[key].get(controller.get()) : controller.get(paths[key]);
+      props[key] = paths[key].getDepsMap ? paths[key].get(controller.get()) : controller.get(paths[key]);
       return props
     }, {})
 
@@ -43,17 +43,11 @@ module.exports = {
 
     return propsToPass
   },
-  _update: function (changes) {
+  _update: function () {
     if (this._isUmounting) {
       return;
     }
-    // Update any computed
-    if (changes) {
-      var paths = this.getStatePaths ? this.getStatePaths(this.props) : {}
-      for (var key in paths) {
-        paths[key].hasChanged && paths[key].hasChanged(changes);
-      }
-    }
+
     this.forceUpdate();
   }
 }

@@ -42,7 +42,7 @@ module.exports = React.createClass({
     }
     var componentsToRender = traverse(changes, [], []);
     componentsToRender.forEach(function (component) {
-      component._update(changes);
+      component._update();
     })
   },
   registerComponent: function (comp, deps) {
