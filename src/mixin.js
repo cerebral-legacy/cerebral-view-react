@@ -44,6 +44,9 @@ module.exports = {
     return propsToPass
   },
   _update: function (changes) {
+    if (this._isUmounting) {
+      return;
+    }
     // Update any computed
     if (changes) {
       var paths = this.getStatePaths ? this.getStatePaths(this.props) : {}
