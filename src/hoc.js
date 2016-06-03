@@ -14,7 +14,7 @@ function extractDeps(deps, allDeps) {
 
 module.exports = function (Component, paths) {
   return React.createClass({
-    displayName: Component.name + 'Container',
+    displayName: 'CerebralWrapping_' + Component.name,
     mixins: [mixin],
     componentWillReceiveProps: function (nextProps) {
       var hasChange = false;
@@ -49,6 +49,7 @@ module.exports = function (Component, paths) {
       }
       var propsWithModules = this.getPropsWithModules(props);
       var deps = typeof paths === 'function' ? paths(propsWithModules) : paths;
+
       return extractDeps(deps, {});
     },
     getStatePaths: function (props) {

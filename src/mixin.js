@@ -43,9 +43,12 @@ module.exports = {
 
     return propsToPass
   },
-  _update: function () {
+  _update: function (showOverlay) {
     if (this._isUmounting) {
       return;
+    }
+    if (showOverlay && !this.showingOverlay) {
+      this.showOverlay = true;
     }
 
     this.forceUpdate();
