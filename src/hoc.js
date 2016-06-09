@@ -44,7 +44,7 @@ module.exports = function (Component, paths) {
         return propsWithModules
       }, {modules: this.modules});
     },
-    getDepsMap(props) {
+    getDepsMap: function (props) {
       if (!paths) {
         return {}
       }
