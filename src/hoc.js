@@ -6,7 +6,8 @@ function extractDeps(deps, allDeps) {
     if (deps[key].getDepsMap) {
       return extractDeps(deps[key].getDepsMap(), allDeps);
     } else {
-      depsMap[deps[key]] = true;
+      var depsKey = Array.isArray(deps[key]) ? deps[key].join('.') : deps[key];
+      depsMap[depsKey] = true;
     }
     return depsMap;
   }, allDeps);

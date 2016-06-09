@@ -19,7 +19,6 @@ module.exports = React.createClass({
     }
   },
   componentsMap: {},
-  showRenderOverlays: JSON.parse(localStorage.getItem('cerebral_showRenderOverlays')),
   overlays: {},
   overlaysContainer: null,
   componentWillMount: function () {
@@ -30,13 +29,6 @@ module.exports = React.createClass({
     window.addEventListener('cerebral.dev.componentMapPath', function (event) {
       container.updateOverlays(container.componentsMap[event.detail.mapPath]);
     })
-    window.addEventListener('cerebral.dev.toggleShowRenderOverlays', function () {
-      container.showRenderOverlays = !container.showRenderOverlays
-      container.updateOverlays([]);
-    })
-  },
-  shouldShowRenderOverlays: function () {
-    return this.showRenderOverlays;
   },
   extractComponentName: function (component) {
     return component.constructor.displayName.replace('CerebralWrapping_', '');
@@ -62,82 +54,82 @@ module.exports = React.createClass({
       });
       return componentsToRender;
     }
+    var start = Date.now();
     var componentsToRender = traverse(changes, [], []);
     componentsToRender.forEach(function (component) {
       component._update();
     })
+    var end = Date.now();
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' && componentsToRender.length) {
       var container = this;
       var devtoolsComponentsMap = Object.keys(componentsMap).reduce(function (devtoolsComponentsMap, key) {
         devtoolsComponentsMap[key] = componentsMap[key].map(container.extractComponentName);
         return devtoolsComponentsMap;
       }, {})
-      var event = new CustomEvent('cerebral.dev.componentsMap', {
-        detail: devtoolsComponentsMap
+      var event = new CustomEvent('cerebral.dev.components', {
+        detail: {
+          map: devtoolsComponentsMap,
+          render: {
+            start: start,
+            duration: end - start,
+            changes: changes,
+            components: componentsToRender.map(container.extractComponentName)
+          }
+        }
       })
       window.dispatchEvent(event)
-      this.updateOverlays(componentsToRender);
     }
   },
   renderOverlays: function () {
-    if (!this.overlaysContainer) {
-      this.overlaysContainer = document.createElement('div');
-      this.overlaysContainer.style.position = 'fixed';
-      document.body.appendChild(this.overlaysContainer);
+    if (this.isShowingOverlays) {
+      return;
+    }
+    this.isShowingOverlays = true;
+    var overlaysContainer = this.overlaysContainer;
+    if (!overlaysContainer) {
+      overlaysContainer = document.createElement('div');
+      overlaysContainer.style.position = 'absolute';
+      overlaysContainer.style.left = '0px';
+      overlaysContainer.style.top = '0px';
+      document.body.appendChild(overlaysContainer);
     }
     var overlays = this.overlays;
     ReactDOM.render(
       React.createElement('div', {
+        id: 'cerebral_render_overlay',
         style: {
-          position: 'fixed',
+          opacity: 0,
+          transition: 'opacity 0.5s ease-out',
           zIndex: 9999999999
         }
-      }, Object.keys(overlays).map(function (key, index) {
-          var position = key.split('.');
-          return React.createElement('div', {
-            key: index,
-            style: {
-              position: 'fixed',
-              display: 'flex',
-              right: position[0] + 'px',
-              top: position[1] + 'px',
-              paddingTop: '5px'
-            }
-          }, overlays[key].map(function (overlay, index) {
-              return React.createElement(Overlay, {key: index, overlay: overlay})
-            })
-          )
-        }
-      )
-    ), this.overlaysContainer);
+      }, overlays.map(function (overlay, index) {
+        return React.createElement(Overlay, {key: index, overlay: overlay, index: index})
+      })
+    ), overlaysContainer);
+
+    var container = this;
+    setTimeout(function () {
+      document.querySelector('#cerebral_render_overlay').style.opacity = 0.3;
+    }, 10);
+    setTimeout(function () {
+      document.querySelector('#cerebral_render_overlay').style.opacity = 0;
+      setTimeout(function () {
+        ReactDOM.unmountComponentAtNode(overlaysContainer);
+        container.isShowingOverlays = false;
+      }, 500);
+    }, 2000);
   },
   updateOverlays: function (componentsToRender) {
 
-    if (!this.showRenderOverlays) {
-      this.overlays = {};
-    } else {
-      var container = this;
+    var container = this;
 
-      this.overlays = Object.keys(this.componentsMap).reduce(function (data, mapKey) {
-        container.componentsMap[mapKey].forEach(function (component) {
-          if (data.components.indexOf(component) === -1) {
-            var bounds = ReactDOM.findDOMNode(component).getBoundingClientRect();
-            var key = [bounds.left, bounds.top].join('.');
-            data.overlays[key] = data.overlays[key] || [];
-            data.overlays[key].push({
-              shouldRender: componentsToRender.indexOf(component) !== -1,
-              name: container.extractComponentName(component)
-            });
-            data.components.push(component);
-          }
-        });
-        return data;
-      }, {
-        components: [],
-        overlays: {}
-      }).overlays;  
-    }
+    this.overlays = componentsToRender.map(function (component) {
+      return {
+        bounds: ReactDOM.findDOMNode(component).getBoundingClientRect(),
+        offset: document.body.scrollTop
+      };
+    });
 
     this.renderOverlays();
 
