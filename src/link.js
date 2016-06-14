@@ -1,5 +1,4 @@
 var React = require('react')
-var get = require('lodash.get')
 
 module.exports = React.createClass({
   contextTypes: {
@@ -34,12 +33,12 @@ module.exports = React.createClass({
       signalName = signal.signalName
     } else {
       signalName = this.props.signal
-      signal = this.signal = get(controller.getSignals(), signalName)
+      signal = this.signal = controller.getSignals(signalName)
     }
 
     var routerMeta = controller.getModules()['cerebral-module-router']
     if (routerMeta) {
-      router = get(controller.getServices(), routerMeta.path)
+      router = controller.getServices(routerMeta.path)
     }
 
     if (typeof signal !== 'function') {
