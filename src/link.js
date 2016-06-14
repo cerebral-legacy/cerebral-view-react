@@ -39,7 +39,7 @@ module.exports = React.createClass({
 
     var routerMeta = controller.getModules()['cerebral-module-router']
     if (routerMeta) {
-      router = get(controller.getServices(), routerMeta.name)
+      router = get(controller.getServices(), routerMeta.path)
     }
 
     if (typeof signal !== 'function') {
