@@ -12,24 +12,24 @@ module.exports = {
     if (!Object.keys(statePaths).length) {
       return
     }
-    this.context.cerebral.registerComponent(this, this.getDepsMap(this.props));
+    this.context.cerebral.registerComponent(this, this.getDepsMap(this.props))
   },
   componentWillUnmount: function () {
     this._isUmounting = true
-    this.context.cerebral.unregisterComponent(this);
+    this.context.cerebral.unregisterComponent(this)
   },
   shouldComponentUpdate: function (nextProps, nextState) {
     // We only allow forced render by change of props passed
     // or Container tells it to render
-    return false;
+    return false
   },
   getProps: function () {
-    var controller = this.context.cerebral.controller;
+    var controller = this.context.cerebral.controller
     var props = this.props || {}
     var paths = this.getStatePaths ? this.getStatePaths(this.props) : {}
 
     var propsToPass = Object.keys(paths || {}).reduce(function (props, key) {
-      props[key] = paths[key].getDepsMap ? paths[key].get(controller.get()) : controller.get(paths[key]);
+      props[key] = paths[key].getDepsMap ? paths[key].get(controller.get()) : controller.get(paths[key])
       return props
     }, {})
 
@@ -45,12 +45,12 @@ module.exports = {
   },
   _update: function (showOverlay) {
     if (this._isUmounting) {
-      return;
+      return
     }
     if (showOverlay && !this.showingOverlay) {
-      this.showOverlay = true;
+      this.showOverlay = true
     }
 
-    this.forceUpdate();
+    this.forceUpdate()
   }
 }

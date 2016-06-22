@@ -4,6 +4,7 @@ var hoc = require('./src/hoc.js')
 var container = require('./src/container.js')
 var component = require('./src/component.js')
 var link = require('./src/link.js')
+var overlay = require('./src/overlay.js')
 
 module.exports = {
   Mixin: mixin,
@@ -11,5 +12,6 @@ module.exports = {
   HOC: hoc,
   Container: container,
   Component: component,
-  Link: link
+  Link: link,
+  Overlay: overlay
 }
