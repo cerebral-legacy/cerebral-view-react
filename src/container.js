@@ -1,7 +1,7 @@
 /* global CustomEvent */
 var React = require('react')
 var ReactDOM = require('react-dom')
-var Overlay = require('./Overlay')
+var Overlay = require('./overlay')
 
 module.exports = React.createClass({
   propTypes: {
