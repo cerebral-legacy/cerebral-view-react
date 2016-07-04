@@ -13,7 +13,7 @@ function extractDeps (deps, allDeps) {
   }, allDeps)
 }
 
-module.exports = function (Component, paths) {
+module.exports = function (paths, Component) {
   return React.createClass({
     displayName: 'CerebralWrapping_' + Component.name,
     mixins: [mixin],
