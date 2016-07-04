@@ -47,7 +47,9 @@ module.exports = React.createClass({
 
     var passedProps = this.props
     var props = Object.keys(passedProps).reduce(function (props, key) {
-      props[key] = passedProps[key]
+      if (!~['signal', 'params'].indexOf(key)) {
+        props[key] = passedProps[key]
+      }
       return props
     }, {})
 

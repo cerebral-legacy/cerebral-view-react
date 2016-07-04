@@ -7,7 +7,8 @@ module.exports = React.createClass({
   },
   propTypes: {
     app: React.PropTypes.func,
-    controller: React.PropTypes.object.isRequired
+    controller: React.PropTypes.object.isRequired,
+    children: React.PropTypes.node
   },
   getChildContext: function () {
     return {
@@ -15,6 +16,6 @@ module.exports = React.createClass({
     }
   },
   render: function () {
-    return this.props.app ? React.createElement(this.props.app) : React.DOM.div(this.props)
+    return this.props.app ? React.createElement(this.props.app) : this.props.children
   }
 })
