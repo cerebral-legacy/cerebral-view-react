@@ -84,3 +84,26 @@ class App extends React.Component {
   }
 }
 ```
+
+## Testing
+
+If `process.env.NODE_ENV` set to "test" `connect` will not wrap your component and will return it as is, making it easy to test.
+Be sure to use `webpack` (or similar) configured to eliminate unreachable code when making your production build.
+
+Example mocha test
+
+```js
+import React from 'react';
+import { shallow } from 'enzyme';
+import { expect } from 'chai';
+
+import Application from '../components/application';
+import HomePage from '../components/homepage';
+
+describe('<Application />', () => {
+  it('renders the <HomePage />', () => {
+    const wrapper = shallow(<Application page="home" />);
+    expect(wrapper.find(HomePage)).to.have.length.of(1);
+  });
+});
+```
