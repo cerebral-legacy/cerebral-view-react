@@ -12,7 +12,18 @@ function extractDeps (deps, allDeps) {
   }, allDeps)
 }
 
-module.exports = function (paths, Component) {
+function getSignalStub (signalName) {
+  function stubSignal () {
+    // TODO: improve wording, provide at least component and signal names in warning
+    console.warn('Cerebral - it is not supposed to run signals with ServerController.')
+  }
+
+  stubSignal.signalName = signalName
+
+  return stubSignal
+}
+
+module.exports = function (paths, signals, Component) {
   return React.createClass({
     displayName: 'CerebralWrapping_' + (Component.displayName || Component.name),
 
@@ -89,7 +100,18 @@ module.exports = function (paths, Component) {
         return propsToPass
       }, propsToPass)
 
-      propsToPass.signals = this.signals
+      if (signals) {
+        propsToPass = Object.keys(signals).reduce(function (props, key) {
+          props[key] = controller.isServer
+            ? getSignalStub(signals[key])
+            : controller.getSignals(signals[key])
+
+          return props
+        }, propsToPass)
+      } else {
+        // expose all signals
+        propsToPass.signals = this.signals
+      }
       propsToPass.modules = this.modules
 
       return propsToPass

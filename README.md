@@ -31,19 +31,21 @@ React.render(
 , document.querySelector('#app'));
 ```
 
-### Get state in components
+### Connect your components
 
 ```js
 import React from 'react';
 import {connect} from 'cerebral-view-react';
 
-export default connect({
+export default connect(/* state map */{
   isLoading: 'isLoading',
   user: 'user',
   error: 'error'
+},/* signals map */{
+  appMounted: 'appMounted'
 }, class App extends React.Component {
   componentDidMount() {
-    this.props.signals.appMounted();
+    this.props.appMounted();
   }
   render() {
     return (
@@ -55,6 +57,8 @@ export default connect({
   }
 })
 ```
+
+If signals map is omitted, all signals will be exposed at `signals` prop.
 
 You can use passed props in path definition by passing a function:
 ```js
@@ -69,10 +73,12 @@ Decorator syntax is supported as well:
   isLoading: 'isLoading',
   user: 'user',
   error: 'error'
+}, {
+  appMounted: 'appMounted'
 })
 class App extends React.Component {
   componentDidMount() {
-    this.props.signals.appMounted();
+    this.props.appMounted();
   }
   render() {
     return (
