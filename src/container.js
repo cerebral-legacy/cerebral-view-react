@@ -16,14 +16,11 @@ module.exports = React.createClass({
         controller: this.props.controller,
         registerComponent: this.registerComponent,
         unregisterComponent: this.unregisterComponent,
-        updateComponent: this.updateComponent,
-        shouldShowRenderOverlays: this.shouldShowRenderOverlays
+        updateComponent: this.updateComponent
       }
     }
   },
   componentsMap: {},
-  overlays: {},
-  overlaysContainer: null,
   componentDidMount: function () {
     this.onCerebralUpdate({}, true)
     this.props.controller.on('flush', this.onCerebralUpdate)
