@@ -24,11 +24,9 @@ module.exports = React.createClass({
   componentsMap: {},
   overlays: {},
   overlaysContainer: null,
-  componentWillMount: function () {
-    this.props.controller.on('flush', this.onCerebralUpdate)
-  },
   componentDidMount: function () {
     this.onCerebralUpdate({}, true)
+    this.props.controller.on('flush', this.onCerebralUpdate)
   },
   extractComponentName: function (component) {
     return component.constructor.displayName.replace('CerebralWrapping_', '')
