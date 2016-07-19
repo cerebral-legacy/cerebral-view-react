@@ -15,7 +15,7 @@ function extractDeps (deps, allDeps) {
 
 module.exports = function (paths, Component) {
   return React.createClass({
-    displayName: 'CerebralWrapping_' + Component.name,
+    displayName: 'CerebralWrapping_' + (Component.displayName || Component.name),
     mixins: [mixin],
     componentWillReceiveProps: function (nextProps) {
       var hasChange = false
