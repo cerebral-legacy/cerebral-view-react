@@ -30,19 +30,24 @@ module.exports = React.createClass({
   },
   onCerebralUpdate: function (changes, force) {
     var componentsMap = this.componentsMap
+    var componentsMapKeys = Object.keys(componentsMap)
     function traverse (level, currentPath, componentsToRender) {
       Object.keys(level).forEach(function (key) {
         currentPath.push(key)
-        var stringPath = currentPath.join('.')
-        if (componentsMap[stringPath]) {
-          componentsToRender = componentsMap[stringPath].reduce(function (componentsToRender, component) {
-            if (componentsToRender.indexOf(component) === -1) {
-              return componentsToRender.concat(component)
+
+        if (level[key] === true) {
+          var stringPath = currentPath.join('.')
+          componentsMapKeys.forEach(function (componentMapKey) {
+            if (stringPath.indexOf(componentMapKey) === 0 || componentMapKey.indexOf(stringPath) === 0) {
+              componentsToRender = componentsMap[componentMapKey].reduce(function (componentsToRender, component) {
+                if (componentsToRender.indexOf(component) === -1) {
+                  return componentsToRender.concat(component)
+                }
+                return componentsToRender
+              }, componentsToRender)
             }
-            return componentsToRender
-          }, componentsToRender)
-        }
-        if (level[key] !== true) {
+          })
+        } else {
           componentsToRender = traverse(level[key], currentPath, componentsToRender)
         }
         currentPath.pop()
