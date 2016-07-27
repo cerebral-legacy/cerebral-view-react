@@ -1,4 +1,5 @@
 var React = require('react')
+var cleanPath = require('./cleanPath')
 
 function extractDeps (deps, allDeps) {
   return Object.keys(deps).reduce(function (depsMap, key) {
@@ -10,6 +11,25 @@ function extractDeps (deps, allDeps) {
     }
     return depsMap
   }, allDeps)
+}
+
+function propsDiffer (previousProps, nextProps) {
+  var oldPropKeys = Object.keys(previousProps)
+  var newPropKeys = Object.keys(nextProps)
+  var hasChange = false
+
+  if (oldPropKeys.length !== newPropKeys.length) {
+    hasChange = true
+  } else {
+    for (var i = 0; i < newPropKeys.length; i++) {
+      if (previousProps[newPropKeys[i]] !== nextProps[newPropKeys[i]]) {
+        hasChange = true
+        break
+      }
+    }
+  }
+
+  return hasChange
 }
 
 function getSignalStub (signalName) {
@@ -43,21 +63,13 @@ module.exports = function (paths, signals, Component) {
     },
 
     componentWillReceiveProps: function (nextProps) {
-      var hasChange = false
-      var oldPropKeys = Object.keys(this.props)
-      var newPropKeys = Object.keys(nextProps)
-      if (oldPropKeys.length !== newPropKeys.length) {
-        hasChange = true
-      } else {
-        for (var i = 0; i < newPropKeys.length; i++) {
-          if (this.props[newPropKeys[i]] !== nextProps[newPropKeys[i]]) {
-            hasChange = true
-            break
-          }
-        }
-      }
+      var hasChange = propsDiffer(this.props, nextProps)
+
       // If dynamic paths, we need to update them
-      if (typeof paths === 'function') {
+      if (
+        typeof paths === 'function' &&
+        propsDiffer(this.getDepsMap(this.props), this.getDepsMap(nextProps))
+      ) {
         this.context.cerebral.updateComponent(this, this.getDepsMap(nextProps))
       } else {
         hasChange && this._update()
@@ -91,7 +103,7 @@ module.exports = function (paths, signals, Component) {
       var paths = this.getStatePaths ? this.getStatePaths(this.props) : {}
 
       var propsToPass = Object.keys(paths || {}).reduce(function (props, key) {
-        props[key] = paths[key].getDepsMap ? paths[key].get(controller.get()) : controller.get(paths[key])
+        props[key] = paths[key].getDepsMap ? paths[key].get(controller.get()) : controller.get(cleanPath(paths[key]))
         return props
       }, {})
 
