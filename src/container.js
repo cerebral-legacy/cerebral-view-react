@@ -1,10 +1,12 @@
 /* global CustomEvent */
 var React = require('react')
+var cleanPath = require('./cleanPath')
 
 module.exports = React.createClass({
   propTypes: {
     controller: React.PropTypes.object.isRequired,
-    children: React.PropTypes.node.isRequired
+    children: React.PropTypes.node.isRequired,
+    strict: React.PropTypes.bool
   },
   displayName: 'CerebralContainer',
   childContextTypes: {
@@ -31,6 +33,9 @@ module.exports = React.createClass({
   onCerebralUpdate: function (changes, force) {
     var componentsMap = this.componentsMap
     var componentsMapKeys = Object.keys(componentsMap)
+    var componentsToRender = []
+    var start = Date.now()
+
     function traverse (level, currentPath, componentsToRender) {
       Object.keys(level).forEach(function (key) {
         currentPath.push(key)
@@ -54,8 +59,43 @@ module.exports = React.createClass({
       })
       return componentsToRender
     }
-    var start = Date.now()
-    var componentsToRender = traverse(changes, [], [])
+
+    if (this.props.strict) {
+      componentsToRender = componentsMapKeys.reduce(function (allComponents, componentMapKey) {
+        var keyArray = componentMapKey.split('.')
+        // app.user.**
+        // app.user.name
+        var shouldRender = keyArray.reduce(function (currentChangePath, key, index) {
+          if (currentChangePath === true) {
+            return currentChangePath
+          } else if (!currentChangePath) {
+            return false
+          }
+
+          if (key === '*' && index === keyArray.length - 1) {
+            return true
+          } else if (key === '**') {
+            return true
+          }
+
+          return currentChangePath[key]
+        }, changes) === true
+
+        if (shouldRender) {
+          allComponents = componentsMap[componentMapKey].reduce(function (componentsToRender, component) {
+            if (componentsToRender.indexOf(component) === -1) {
+              return componentsToRender.concat(component)
+            }
+            return componentsToRender
+          }, allComponents)
+        }
+
+        return allComponents
+      }, [])
+    } else {
+      componentsToRender = traverse(changes, [], [])
+    }
+
     componentsToRender.forEach(function (component) {
       component._update()
     })
@@ -82,7 +122,9 @@ module.exports = React.createClass({
     }
   },
   registerComponent: function (comp, deps) {
-    this.componentsMap = Object.keys(deps).reduce(function (componentsMap, key) {
+    var strict = this.props.strict
+    this.componentsMap = Object.keys(deps).reduce(function (componentsMap, dep) {
+      var key = strict ? dep : cleanPath(dep)
       componentsMap[key] = componentsMap[key] ? componentsMap[key].concat(comp) : [comp]
       return componentsMap
     }, this.componentsMap)
