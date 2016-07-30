@@ -52,6 +52,10 @@ module.exports = function (paths, signals, Component) {
     },
 
     componentWillMount: function () {
+      if (!this.context.cerebral || !this.context.cerebral.controller) {
+        throw new Error('Can not find Cerebral controller, did you remember to use the Container component? Read more at: http://www.cerebraljs.com/documentation/cerebral-view-react')
+      }
+
       this.signals = this.context.cerebral.controller.isServer ? {} : this.context.cerebral.controller.getSignals()
       this.modules = this.context.cerebral.controller.isServer ? {} : this.context.cerebral.controller.getModules()
 
