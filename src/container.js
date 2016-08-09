@@ -97,6 +97,7 @@ module.exports = React.createClass({
     }
 
     componentsToRender.forEach(function (component) {
+      component.renderCount = 'renderCount' in component ? component.renderCount + 1 : 1
       component._update()
     })
     var end = Date.now()
@@ -104,9 +105,16 @@ module.exports = React.createClass({
     if (window && process.env.NODE_ENV !== 'production' && (componentsToRender.length || force)) {
       var container = this
       var devtoolsComponentsMap = Object.keys(componentsMap).reduce(function (devtoolsComponentsMap, key) {
-        devtoolsComponentsMap[key] = componentsMap[key].map(container.extractComponentName)
+        devtoolsComponentsMap[key] = componentsMap[key].map(function (component) {
+          component.renderCount = 'renderCount' in component ? component.renderCount : 1
+          return {
+            name: container.extractComponentName(component),
+            renderCount: component.renderCount
+          }
+        })
         return devtoolsComponentsMap
       }, {})
+
       var event = new CustomEvent('cerebral.dev.components', {
         detail: {
           map: devtoolsComponentsMap,
