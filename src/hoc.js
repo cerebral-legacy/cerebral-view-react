@@ -63,7 +63,9 @@ module.exports = function (paths, signals, Component) {
       if (!Object.keys(statePaths).length) {
         return
       }
-      this.context.cerebral.registerComponent(this, this.getDepsMap(this.props))
+      if (!this.context.cerebral.controller.isServer) {
+        this.context.cerebral.registerComponent(this, this.getDepsMap(this.props))
+      }
     },
 
     componentWillReceiveProps: function (nextProps) {
