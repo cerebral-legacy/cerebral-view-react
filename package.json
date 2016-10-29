@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cerebral/cerebral-view-react.git"
+    "url": "https://github.com/cerebral-legacy/cerebral-view-react.git"
   },
   "keywords": [
     "react",
@@ -23,9 +23,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cerebral/cerebral-view-react/issues"
+    "url": "https://github.com/cerebral-legacy/cerebral-view-react/issues"
   },
-  "homepage": "https://github.com/cerebral/cerebral-view-react#readme",
+  "homepage": "https://github.com/cerebral-legacy/cerebral-view-react#readme",
   "devDependencies": {
     "commitizen": "^2.5.0",
     "conventional-changelog": "0.0.17",
