@@ -1,5 +1,7 @@
 var React = require('react')
 var cleanPath = require('./cleanPath')
+var createReactClass = require('create-react-class')
+var PropTypes = require('prop-types')
 
 function extractDeps (deps, allDeps) {
   return Object.keys(deps).reduce(function (depsMap, key) {
@@ -44,11 +46,11 @@ function getSignalStub (signalName) {
 }
 
 module.exports = function (paths, signals, Component) {
-  return React.createClass({
+  return createReactClass({
     displayName: 'CerebralWrapping_' + (Component.displayName || Component.name),
 
     contextTypes: {
-      cerebral: React.PropTypes.object
+      cerebral: PropTypes.object
     },
 
     componentWillMount: function () {
