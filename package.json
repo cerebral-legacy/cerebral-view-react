@@ -42,5 +42,9 @@
     "commitizen": {
       "path": "node_modules/cz-customizable"
     }
+  },
+  "dependencies": {
+    "create-react-class": "^15.6.2",
+    "prop-types": "^15.6.0"
   }
 }

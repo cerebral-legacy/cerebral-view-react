@@ -1,16 +1,18 @@
 /* global CustomEvent */
 var React = require('react')
 var cleanPath = require('./cleanPath')
+var createReactClass = require('create-react-class')
+var PropTypes = require('prop-types')
 
-module.exports = React.createClass({
+module.exports = createReactClass({
   propTypes: {
-    controller: React.PropTypes.object.isRequired,
-    children: React.PropTypes.node.isRequired,
-    strict: React.PropTypes.bool
+    controller: PropTypes.object.isRequired,
+    children: PropTypes.node.isRequired,
+    strict: PropTypes.bool
   },
   displayName: 'CerebralContainer',
   childContextTypes: {
-    cerebral: React.PropTypes.object.isRequired
+    cerebral: PropTypes.object.isRequired
   },
   getChildContext: function () {
     return {

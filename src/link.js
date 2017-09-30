@@ -1,16 +1,18 @@
 var React = require('react')
+var createReactClass = require('create-react-class')
+var PropTypes = require('prop-types')
 
-module.exports = React.createClass({
+module.exports = createReactClass({
   contextTypes: {
-    cerebral: React.PropTypes.object
+    cerebral: PropTypes.object
   },
 
   propTypes: {
-    children: React.PropTypes.node,
-    params: React.PropTypes.object,
-    signal: React.PropTypes.oneOfType([
-      React.PropTypes.func,
-      React.PropTypes.string
+    children: PropTypes.node,
+    params: PropTypes.object,
+    signal: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.string
     ]).isRequired
   },
 
